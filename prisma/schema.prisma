@@ -8,21 +8,47 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
+  id        String    @id @default(cuid())
+  email     String    @unique
   password  String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   texts     Text[]
+  logs      WordLog[]
 }
 
 model Text {
+  id        String    @id @default(cuid())
+  title     String
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapters  Chapter[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+model Chapter {
   id        String   @id @default(cuid())
   title     String
-  content   String   @db.Text
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String   @default("") @db.Text
+  position  Int
+  wordCount Int      @default(0)
+  textId    String
+  text      Text     @relation(fields: [textId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([userId])
+  @@index([textId])
+}
+
+// Mots écrits par jour (variation nette cumulée à chaque sauvegarde)
+model WordLog {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date   String // YYYY-MM-DD (date locale du navigateur)
+  words  Int    @default(0)
+
+  @@unique([userId, date])
 }

@@ -1,12 +1,13 @@
-# EpiCenter Notes
+# WritingTomate
 
 Un seul repo : Express + Prisma (PostgreSQL) + React (Vite). Auth email/mot de passe (JWT en cookie httpOnly).
+Textes à plusieurs chapitres, compteur de mots, progression par jour, copier-coller bloqué.
 
 ## Lancer en local
 ```
 npm install
 cp .env.example .env      # renseigner DATABASE_URL et JWT_SECRET
-npx prisma migrate dev --name init
+npx prisma migrate dev --name chapters
 npm run dev               # front http://localhost:5173, api :3000
 ```
 
